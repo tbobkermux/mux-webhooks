@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>Socket.IO Webhooks</title>
         <script src="/socket.io/socket.io.js"></script>
         <script>
             const socket = io();
             socket.on("webhook", function(message) { 
                 console.log("webhook: ", message) 
                 const update = document.createElement("div");
-                update.innerText = message;
+                update.className='response';
+                update.innerText = JSON.stringify(message, null, 4);
                 document.getElementById("msg").appendChild(update);
             });
         </script>
+        <style>
+          .response{
+            padding: 1em;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: medium;
+          }
+        </style>
   </head>
   <body>
+    <h1>Recieved webhooks</h1>
     <div id="msg"></div>
   </body>
 </html>

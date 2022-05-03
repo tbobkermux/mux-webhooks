@@ -9,14 +9,14 @@ const { parse } = require("path");
 const app = express()
 const server = http.createServer(app);
 app.use(bodyParser.json())
-server.listen(5005, () => console.log(`Server running on port ${PORT}`))
+server.listen(5005, () => console.log(`Server running on port 5005`))
 
 const io = new Server(server);
 
 // route to accept the webhook
 app.post("/", (req, res) => {
   console.log(req.body)
-  io.sockets.emit("webhook", req.body.type);
+  io.sockets.emit("webhook", req.body);
   res.status(200).end() // Responding is important
 })
 
