@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            const socket = io();
+            socket.on("webhook", function(message) { 
+                console.log("webhook: ", message) 
+                const update = document.createElement("div");
+                update.innerText = message;
+                document.getElementById("msg").appendChild(update);
+            });
+        </script>
+  </head>
+  <body>
+    <div id="msg"></div>
+  </body>
+</html>
