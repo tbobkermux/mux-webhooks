@@ -7,3 +7,5 @@ Install and run ngrok locally to get a public facing webhook url
 
 ## Run the example
 ```node listener.js``` then start ngrok with ```ngrok http 5005```
+
+Use the generated ngrok public url as the url for webhooks to notify.
