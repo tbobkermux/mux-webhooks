@@ -1,5 +1,5 @@
 # Simple example of how to use Mux Webhook
-Uses socket.io for websocket communication between the server and client to automatically update the client side when a webhook is recieved. 
+Uses socket.io for websocket communication between the server and client to automatically update the client side when a webhook is recieved and Upchunk for direct uploads. 
 
 ## Requirements 
 Run ```yarn install``` or ```npm install```
