@@ -9,6 +9,8 @@ Install and run ngrok locally to get a public facing webhook url
 ## Run the example
 rename the ```.env_example``` file to ```.env``` and populate the environment variables with your API key and secret.
 
-```node listener.js``` then start ngrok with ```ngrok http 5005```
+Now run node and ngrok by typing these commands in the terminal ```node listener.js``` then start ngrok with ```ngrok http 5005```
 
-Use the generated ngrok public url as the url for webhooks to notify.
+Use the generated public ngrok url and use it as the url to notify in Mux dashboard > settings > Webhooks > Create New webhook. 
+
+Make sure to select the same environment as the API key/secret. 
