@@ -2,27 +2,84 @@
 <html>
   <head>
     <title>Socket.IO Webhooks</title>
+        <script src="https://unpkg.com/@mux/upchunk@2"></script>
         <script src="/socket.io/socket.io.js"></script>
-        <script>
-            const socket = io();
-            socket.on("webhook", function(message) { 
-                console.log("webhook: ", message) 
-                const update = document.createElement("div");
-                update.className='response';
-                update.innerText = JSON.stringify(message, null, 4);
-                document.getElementById("msg").appendChild(update);
-            });
-        </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <style>
           .response{
             padding: 1em;
             font-family: 'Courier New', Courier, monospace;
             font-size: medium;
+            border: 2px solid #565252;
+            width: 100%;
+            margin: 1em auto;
           }
         </style>
   </head>
   <body>
-    <h1>Received webhooks</h1>
-    <div id="msg"></div>
+    
+    <div style="width: 1000px;margin:auto">
+      
+      <h1 style="text-align:center">Create Asset</h1>
+      <input type="text" placeholder="asset url" id="asset_url" style="display:block;margin:auto" />
+      <button onClick="javascript: createAssetFromUrl();" style="display:block;margin:auto">Create Asset</button>
+      
+      <h1 style="text-align:center">Direct Upload</h1>
+      <input id="picker" type="file" style="display:block;margin:auto" />
+      
+      <h1 style="text-align:center">Received webhooks</h1>
+      <div id="msg"></div>
+    </div>
+
+    <script>
+
+      const createAssetFromUrl = async () => {
+        const rawResponse = await fetch('/create', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({url: $('#asset_url').val()})
+      });
+      }
+
+      const socket = io();
+      socket.on("webhook", function(message) { 
+          console.log("webhook: ", message);
+          $( "#msg" ).prepend(
+            $('<pre></pre>').addClass('response').text(JSON.stringify(message, null, ' '))
+          );
+      });
+
+      const picker = document.getElementById('picker');
+
+      picker.onchange = async () => {
+
+        const fetchUploadUrl = await fetch('/url');
+        const getUploadUrl = await fetchUploadUrl.text();
+
+        console.log(getUploadUrl);
+
+        const upload = UpChunk.createUpload({
+          endpoint: getUploadUrl,
+          file: picker.files[0],
+          chunkSize: 30720, 
+        });
+
+        upload.on('error', err => {
+          console.error('💥 🙀', err.detail);
+        });
+
+        upload.on('progress', progress => {
+          console.log(`So far we've uploaded ${progress.detail}% of this file.`);
+        });
+
+        upload.on('success', () => {
+          console.log("Wrap it up, we're done here. 👋");
+        });
+        
+      };
+    </script>
   </body>
 </html>
