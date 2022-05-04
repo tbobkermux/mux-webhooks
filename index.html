@@ -5,6 +5,7 @@
         <script src="https://unpkg.com/@mux/upchunk@2"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
         <style>
           .response{
             padding: 1em;
@@ -26,6 +27,12 @@
       
       <h1 style="text-align:center">Direct Upload</h1>
       <input id="picker" type="file" style="display:block;margin:auto" />
+
+      <video
+        id="my-player"
+        controls
+        style="width: 100%; max-width: 500px; display:block; margin: 1em auto"
+      ></video>
       
       <h1 style="text-align:center">Received webhooks</h1>
       <div id="msg"></div>
@@ -46,6 +53,10 @@
 
       const socket = io();
       socket.on("webhook", function(message) { 
+        if(message.data.hasOwnProperty('playback_ids')){
+          const playbackid = message.data.playback_ids[0].id;
+          playVideo(playbackid);
+        }
           console.log("webhook: ", message);
           $( "#msg" ).prepend(
             $('<pre></pre>').addClass('response').text(JSON.stringify(message, null, ' '))
@@ -80,6 +91,23 @@
         });
         
       };
+
+      function playVideo(playbackid){
+        const video = document.querySelector('#my-player');
+        const src = `https://stream.mux.com/${playbackid}.m3u8`;
+        if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          // Some browsers (safari and ie edge) support HLS natively
+          video.src = src;
+          video.play();
+        } else if (Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(src);
+          hls.attachMedia(video);
+          video.play();
+        } else {
+          console.error("This is a legacy browser that doesn't support MSE");
+        }
+      }
     </script>
   </body>
 </html>
