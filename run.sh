@@ -4,14 +4,6 @@
 # Check for dependent packages
 #################################
 
-#check for python
-if ! command -v python3 > /dev/null 2>&1; then brew install python@3.10; fi
-
-if ~ command -v pip --version > /dev/null 2>&1; then brew install pip; fi
-
-# check for Flask or requests
-#pip list | grep -E '(Flask|requests)' > /dev/null && if [ $? != 0 ]; then pip install -r requirements.txt; fi
-
 # check for tmux
 if ! command -v tmux > /dev/null 2>&1; then brew install mux; fi
 
