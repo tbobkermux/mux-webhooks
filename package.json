@@ -4,7 +4,8 @@
   "description": "Creates a place to not only *receieve* webhooks but also programatically play with them.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./run.sh"
   },
   "repository": {
     "type": "git",
